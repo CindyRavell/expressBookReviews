@@ -1,5 +1,5 @@
 const express = require("express");
-// let books = require("./booksdb.js");
+let booksLocally = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
@@ -137,7 +137,7 @@ public_users.get("/title/:title", function (req, res) {
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
   return res.status(200).json({
-    data: books[req.params.isbn].reviews,
+    data: booksLocally[req.params.isbn].reviews,
     message: "Completed Successfully",
   });
 });

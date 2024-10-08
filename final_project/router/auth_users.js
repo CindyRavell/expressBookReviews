@@ -81,13 +81,10 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
   const reviewsObject = books[isbn].reviews;
 
   if (reviewsObject[username]) {
-    // Delete friend from 'friends' object based on provided email
     delete reviewsObject[username];
   } else {
     res.status(400).send(`Review not added yet`);
   }
-
-  // Send response confirming deletion of friend
   res.send(`Review deleted.`);
 });
 
