@@ -109,7 +109,7 @@ public_users.get("/title/:title", function (req, res) {
     .get(urlDataBase)
     .then((response) => {
       const books = response.data;
-      // Filter books where the author's name matches the regex
+      // Filter books where the title's name matches the regex
       const bookBytitle = Object.keys(books)
         .filter((bookId) => regex.test(books[bookId].title))
         .map((bookId) => books[bookId]);
