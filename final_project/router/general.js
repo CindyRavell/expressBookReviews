@@ -68,17 +68,11 @@ public_users.get("/isbn/:isbn", function (req, res) {
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
-  //Write your code here
   const regex = new RegExp(req.params.author, "i");
-
-  // return res
-  //   .status(200)
-  //   .json({ data: booksByAuthor, message: "Completed Successfully" });
   axios
     .get(urlDataBase)
     .then((response) => {
-      const books = response.data; // Assuming response.data is already an object
-      const book = books[req.params.isbn];
+      const books = response.data;
       // Filter books where the author's name matches the regex
       const booksByAuthor = Object.keys(books)
         .filter((bookId) => {
@@ -86,10 +80,10 @@ public_users.get("/author/:author", function (req, res) {
         })
         .map((bookId) => books[bookId]);
       try {
-        if (book) {
+        if (booksByAuthor.length > 0) {
           return res
             .status(200)
-            .send({ data: book, message: "Completed Successfully" });
+            .send({ data: booksByAuthor, message: "Completed Successfully" });
         } else {
           return res.status(404).json({
             message: "Book not found",
@@ -110,13 +104,34 @@ public_users.get("/author/:author", function (req, res) {
 public_users.get("/title/:title", function (req, res) {
   //Write your code here
   const regex = new RegExp(req.params.title, "i");
-  const bookBytitle = Object.keys(books)
-    .filter((bookId) => regex.test(books[bookId].title))
-    .map((bookId) => books[bookId]);
 
-  return res
-    .status(200)
-    .json({ data: bookBytitle, message: "Completed Successfully" });
+  axios
+    .get(urlDataBase)
+    .then((response) => {
+      const books = response.data;
+      // Filter books where the author's name matches the regex
+      const bookBytitle = Object.keys(books)
+        .filter((bookId) => regex.test(books[bookId].title))
+        .map((bookId) => books[bookId]);
+      try {
+        if (bookBytitle.length > 0) {
+          return res
+            .status(200)
+            .send({ data: bookBytitle, message: "Completed Successfully" });
+        } else {
+          return res.status(404).json({
+            message: "Book not found",
+          });
+        }
+      } catch (parseError) {
+        return res
+          .status(500)
+          .json({ error: "Error parsing data from database" });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: "An error occurred while fetching data" });
+    });
 });
 
 //  Get book review
